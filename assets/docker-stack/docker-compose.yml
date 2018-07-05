@@ -1,0 +1,102 @@
+version: '2'
+
+services:
+
+##############################################################################################
+# This is a template for a docker-compose.yml file
+# It relies on mup to substitute the following paramters
+#   app: {
+#     name: 'tppweb',                 Name of the application, used for docker hosts root directory /opt/<%= name %>
+#     type: 'odoo',
+#     domain: 'tppweb.ogecko.com',    Used by nginx reverse proxy, creates https certificate & redirects traffic for this domain
+#     path: '..',
+#     dbUserUID: 1002,                This must match the owner UID:GID of /opt/<%= name %>/dbdata on the docker host machine
+#     odooUserUID: 1000,              This must match the UID:GID owner of /opt/<%= name %>/data on the docker host machine
+#     odooVirtualPort: 8059,          Used between nginx and odoo container for http and xml
+#     odooLongPollingPort: 8061,      Used between nginx and odoo container for longpolling http
+#     servers: {
+#       nuc01: {}
+#     },
+#   },
+
+##############################################################################################
+# POSTGRES Service
+  postgres:
+    build: ./docker-postgres-image
+    restart: always
+    command: "postgres -c 'config_file=/etc/postgresql/postgresql.conf'"
+# Only use ports entry for staging and debugging versions of postgres image
+#    ports:
+#      - 5432:5432
+    <%= portCmd %>:
+      - <%= portValDB %>
+    volumes:
+      - /opt/<%= name %>/dbdata:/var/lib/postgresql/data
+      - /opt/<%= name %>/secrets:/run/secrets:ro
+      - /etc/passwd:/etc/passwd:ro
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
+# This must match the owner UID:GID of /opt/<%= name %>/dbdata on the docker host machine
+    user: "<%= dbUserUID %>:<%= dbUserUID %>"
+    network_mode: "bridge"
+
+##############################################################################################
+# ODOO Service
+  odoo:
+    build: ./docker-odoo-image
+    restart: always
+    command: start
+# Use ports for staging (is this HOST:CONTAINER port will be open on the docker host machine)
+#    ports:
+#     - <%= odooVirtualPort %>:<%= odooVirtualPort %>
+# Use expose for production (ie mup-nginx-proxy port open to wide word, odoo port is only exposed to nginx container)
+#    expose:
+#     - <%= odooVirtualPort %>
+    <%= portCmd %>:
+      - <%= portValODOO %>
+    links:
+      - postgres:db
+    volumes:
+      - /opt/<%= name %>/addons:/opt/odoo/additional_addons
+      - /opt/<%= name %>/filestore:/opt/odoo/data/filestore
+      - /opt/<%= name %>/sessions:/opt/odoo/data/sessions
+      - /opt/<%= name %>/backups:/opt/odoo/data/backups
+      - /opt/<%= name %>/secrets:/run/secrets:ro
+    environment:
+# This must match the UID:GID owner of /opt/<%= name %>/data on the docker host machine
+      - TARGET_UID=<%= odooUserUID %>
+# Use ODOO_ADMIN_PASSWD as Master Password in Odoo Database Setup Dialog
+      - ODOO_ADMIN_PASSWD_FILE=/run/secrets/ODOO_ADMIN_PASSWD
+      - ODOO_DB_PASSWORD_FILE=/run/secrets/ODOO_DB_PASSWORD
+      - ODOO_DB_USER=odoo
+      - ODOO_DATABASE=odoo
+      - ODOO_DB_PORT=<%= dbPort %>
+# Need ODOO_XMLRPC_PORT to match VIRTUAL_PORT for nginx
+      - ODOO_XMLRPC_PORT=<%= odooVirtualPort %>
+      - ODOO_LONGPOLLING_PORT=<%= odooLongPollingPort %>
+#      - ODOO_LOG_SQL=True
+#      - ODOO_LOG_LEVEL=debug
+      - LETSENCRYPT_HOST=<%= domain %>
+      - LETSENCRYPT_EMAIL=admin@ogecko.com
+      - VIRTUAL_HOST=<%= domain %>
+      - VIRTUAL_PORT=<%= odooVirtualPort %>
+      - FETCH_OCA_DEPENDENCIES=False
+    network_mode: "bridge"
+
+# ##############################################################################################
+# # PGADMIN4 Service
+#   pgadmin4:
+#     image: dpage/pgadmin4
+#     restart: always
+#     links:
+#       - postgres:postgres
+#     ports:
+#       - 8055:8055
+#     volumes:
+#       - /opt/tppweb/secrets:/run/secrets:ro
+#     environment:
+#       - PGADMIN_DEFAULT_EMAIL=jdmorriso@gmail.com
+#       - PGADMIN_DEFAULT_PASSWORD=test
+#     network_mode: "bridge"
+

@@ -1,0 +1,14 @@
+{
+  "name": "mup-odoo-plugin",
+  "version": "1.0.0",
+  "description": "Plugin for deploying odoo with mup",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Morrison",
+  "license": "MIT",
+  "dependencies": {
+    "nodemiral": "^1.1.1"
+  }
+}

@@ -1,0 +1,33 @@
+
+server-tools https://github.com/OCA/server-tools.git 10.0
+# install Remove odoo.com Bindings
+# install Database Auto-Backup (need to run $ pip install pysftp)
+# install Manage model export profiles
+
+bank-statement-import https://github.com/OCA/bank-statement-import.git 10.0
+# install Import OFX Bank Statement
+
+mis-builder https://github.com/OCA/mis-builder.git 10.0
+# install MIS Builder
+# install MIS Builder Budget
+
+# CybroAddons https://github.com/CybroOdoo/CybroAddons.git 10.0
+# cannot find validate_email module
+# install website_coupon
+# install website_featured_products
+
+website https://github.com/OCA/website.git 10.0
+# install website_odoo_debranding
+# install website_snippet_anchor
+
+web https://github.com/OCA/web.git 10.0
+# install web_responsive
+
+odoo_sale_addons https://github.com/ogecko/odoo_sale_addons.git 10.0
+# install product_minimum_order
+# install website_coupon
+
+
+# BUG in connector/component!     account-invoicing https://github.com/OCA/account-invoicing.git 10.0
+# install Sale timesheet
+
