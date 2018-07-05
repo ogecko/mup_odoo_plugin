@@ -59,7 +59,7 @@ module.exports = {
     },
   },
 
-  plugins: ['mup-odoo-plugin']
+  plugins: ['@ogecko/mup-odoo-plugin']
 
 };
 ```
