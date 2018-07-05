@@ -23,9 +23,6 @@ using LetsEncrypt.
 ## mup stop
 * Stops both the postgress and odoo containers
 
-## mup debug
-* Starts up the postgress image (if it isnt already running) with any modified ports
-
 ## Configuring the mup.js configuration file
 You can create different mup.js files for each environment. For example
 * mup-development.js - for development environment and debugging (isSource: true)
@@ -54,6 +51,7 @@ module.exports = {
     odooUserUID: 1000,              // This must match the UID:GID owner of /opt/<%= name %>/data on the docker host machine
     odooVirtualPort: 8059,          // Used between nginx and odoo container for http and xml
     odooLongPollingPort: 8061,      // Used between nginx and odoo container for longpolling http
+    dbPort: 5431,                   // Postgres Port to use (normally default for Postgres is 5432), change when there is a conflict
     isProduction: false,            // When true, exposes Odoo port to docker only (for nginx reverse proxy container) 
     isSource: false,                // When true, use Odoo source (useful for dev debugging) instead of Odoo container
     servers: {
@@ -95,7 +93,6 @@ You will also need to add a new VSCode launch.json profile for Odoo.
 ```
 
 On the development machine you will need to make the following changes
-* Run `make debug` to start the postgress container with the new ports opened (unless you have postgress already running on a staging server)
 * Update the file /opt/appname/local-odoo-image/oddo.conf to 
   * configure the docker host machine that postgress is running on
   * set the db_password and admin_password (based on /opt/appname/secrets from docker host machine)
@@ -115,11 +112,6 @@ admin_passwd = quu8oeKoo3uXu1Vachahg8shieV4keingiuzee2eish0beingoozai8oelee0cuj
 data_dir = /opt/tppweb/data
 addons_path = /opt/tppweb/sources/odoo/addons,/opt/tppweb/additional_addons/web,./odoo_sale_addons
 ```
-
-  * db_host = hostname of the docker host machine running the postgress container
-  * db_password = the postgress odoo user password
-  * admin_passwd = the odoo master password
-
 
 ## Configuring Odoo
 Once started you can navigate a browser to the odoo virtual port to start configuring odoo
