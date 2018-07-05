@@ -213,3 +213,10 @@ On the docker host, edit the file /opt/mup-nginx-proxy/config/nginx-default.conf
 client_max_body_size to 100M;
 ```
 On the mup-nginx-proxy container run `nginx -s reload`
+
+### Cannot see anything in VSCode TERMINAL
+When VSCode is run inside of VMWare Workstation, you may encounter an issue in using its Terminal. All the text shown is black on black and unreadable. To solve this issue you need to change the rendering mode of the terminal in the VSCode Settings. Choose File>Preferences>Settings, then add this following line.
+
+```
+    "terminal.integrated.rendererType": "dom"
+```
