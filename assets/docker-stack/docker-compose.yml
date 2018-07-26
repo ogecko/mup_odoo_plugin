@@ -81,7 +81,7 @@ services:
       - LETSENCRYPT_EMAIL=admin@ogecko.com
       - VIRTUAL_HOST=<%= domain %>
       - VIRTUAL_PORT=<%= odooVirtualPort %>
-      - FETCH_OCA_DEPENDENCIES=False
+      - FETCH_OCA_DEPENDENCIES=True
     network_mode: "bridge"
 
 # ##############################################################################################
