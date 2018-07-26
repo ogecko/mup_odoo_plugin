@@ -214,6 +214,13 @@ client_max_body_size to 100M;
 ```
 On the mup-nginx-proxy container run `nginx -s reload`
 
+### Unable to import large csv file (eg country.state.city.sydney.out.csv)
+Google Chrome may raise an error in a Javascript function called set_file - Error 352: ERR_SPDY_PING_FAILED. The easiest way to workaround this issue is to use Microsoft Edge for uploading large files as this browser does not timeout large POST requests. 
+
+```
+client_max_body_size to 100M;
+```
+On the mup-nginx-proxy container run `nginx -s reload`
 ### Cannot see anything in VSCode TERMINAL
 When VSCode is run inside of VMWare Workstation, you may encounter an issue in using its Terminal. All the text shown is black on black and unreadable. To solve this issue you need to change the rendering mode of the terminal in the VSCode Settings. Choose File>Preferences>Settings, then add this following line.
 
