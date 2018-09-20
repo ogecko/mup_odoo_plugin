@@ -205,6 +205,17 @@ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
 apt update
 apt install postgresql-client-9.6
 ```
+
+### PageSpeed Insights recommends to enable compression
+mup-nginx-proxy has gzip off by default. To turn it on.
+```
+docker exec -it mup-nginx-proxy bash
+sed -i 's/#gzip/gzip/' /etc/nginx/nginx.conf
+cat /etc/nginx/nginx.conf
+nginx -s reload
+
+```
+
 ### Unable to restore a large backup zip file
 Likely cause is the nginx proxy limiting the client_max_body_size to 10M;
 On the docker host, edit the file /opt/mup-nginx-proxy/config/nginx-default.conf
@@ -212,7 +223,11 @@ On the docker host, edit the file /opt/mup-nginx-proxy/config/nginx-default.conf
 ```
 client_max_body_size to 100M;
 ```
-On the mup-nginx-proxy container run `nginx -s reload`
+On the EC2 server go into the mup-nginx-proxy container and run `nginx -s reload`
+```
+docker exec -it mup-nginx-proxy bash
+nginx -s reload
+```
 
 ### Unable to import large csv file (eg country.state.city.sydney.out.csv)
 Google Chrome may raise an error in a Javascript function called set_file - Error 352: ERR_SPDY_PING_FAILED. The easiest way to workaround this issue is to use Microsoft Edge for uploading large files as this browser does not timeout large POST requests. 
