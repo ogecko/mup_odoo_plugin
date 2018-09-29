@@ -63,6 +63,7 @@ services:
       - /opt/<%= name %>/sessions:/opt/odoo/data/sessions
       - /opt/<%= name %>/backups:/opt/odoo/data/backups
       - /opt/<%= name %>/secrets:/run/secrets:ro
+      - /opt/<%= name %>/logs:/opt/odoo/data/logs
     environment:
 # This must match the UID:GID owner of /opt/<%= name %>/data on the docker host machine
       - TARGET_UID=<%= odooUserUID %>
@@ -72,6 +73,8 @@ services:
       - ODOO_DB_USER=odoo
       - ODOO_DATABASE=odoo
       - ODOO_DB_PORT=<%= dbPort %>
+      - ODOO_LOGFILE=/opt/odoo/data/logs/odooserver.log
+      - ODOO_LOGROTATE=True
 # Need ODOO_XMLRPC_PORT to match VIRTUAL_PORT for nginx
       - ODOO_XMLRPC_PORT=<%= odooVirtualPort %>
       - ODOO_LONGPOLLING_PORT=<%= odooLongPollingPort %>
