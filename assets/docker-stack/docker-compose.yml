@@ -78,6 +78,7 @@ services:
 # Need ODOO_XMLRPC_PORT to match VIRTUAL_PORT for nginx
       - ODOO_XMLRPC_PORT=<%= odooVirtualPort %>
       - ODOO_LONGPOLLING_PORT=<%= odooLongPollingPort %>
+      - ODOO_PROXY_MODE=True
 #      - ODOO_LOG_SQL=True
 #      - ODOO_LOG_LEVEL=debug
       - LETSENCRYPT_HOST=<%= domain %>
