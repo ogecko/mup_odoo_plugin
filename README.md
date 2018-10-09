@@ -242,3 +242,25 @@ When VSCode is run inside of VMWare Workstation, you may encounter an issue in u
 ```
     "terminal.integrated.rendererType": "dom"
 ```
+
+### ODOO wekzeug log does not show correct client IP addresses
+When running ODOO in a Docker container behind an Nginx reverse proxy, you may encounter a problem with the logs not showing the correct client IP addresses. This can make it challenging to debug issues when there are many clients connected at once. To solve this problem you need to ensure the compose-makefile.yml includes ODOO_PROXY_MODE=True to set proxy_mode in the odoo.conf. 
+
+Also you need to modify the file
+/opt/odoo/sources/odoo/odoo/service/wsgi_server.py and change the last function at line 182 to the following. ie remove the check for HTTP_X_FORWARDED_HOST and add a line to set the address_string to x-real-ip (if it exists) or client_address[0] (if it doesnt). 
+
+```
+def application(environ, start_response):
+    if config['proxy_mode']:
+        werkzeug.serving.WSGIRequestHandler.address_string = lambda self: self.headers.get('x-real-ip', self.client_address[0])
+        return werkzeug.contrib.fixers.ProxyFix(application_unproxied)(environ, start_response)
+    else:
+        return application_unproxied(environ, start_response)
+```
+If you need to alter this on a live docker image, the easiest way is from Windows, uploaded the modified file to the Amazon EC2 Server hosting docker, into the /opt/tppweb/logs directory. Then enter the following commands:
+
+```
+$ docker exec -it tppweb-odoo_1 bash
+# cd /opt/odoo/sources/odoo/odoo/service
+# cp /opt/odoo/data/logs/wsgi_server.py .
+```
