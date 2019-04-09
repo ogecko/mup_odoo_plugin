@@ -195,6 +195,30 @@ From Emipro Technologies Pvt. Ltd
 * If customer can afford healthy cost, we always suggest them to set up their own in-house hosting server instead of VPS.
 
 ## Troubleshooting
+
+### Odoo intermittantly hangs every 5 minutes, due to email traffic timeout
+Amazon EC2 throttles email traffic over port 25 by default. To avoid timeouts when sending email from Amazon EC2, use a different port eg 587.
+
+When Setting up the Odoo Outgoing Mail Server use the following settings
+```
+SMTP Server: smtp.mailgun.org
+SMTP Port: 587
+Connection Security: TLS (STARTTLS)
+Username: postmaster@tppweb.ogecko.com
+Password: as per Mailgun Account
+```
+
+When Setting up the Odoo Incoming Mail Server use the following settings. 
+```
+Server Type: POP Server
+Server Name: pop.gmail.com
+Port: 995
+SSL/TLS: Yes
+Username: theposyplace@gmail.com
+Password: as per Google Account
+Google Account Settings > Security > Less secure app access: On
+```
+
 ### Backups not working, creating a 2018_06_24_02_00_00.dump.zip of size 0
 Likely cause is postgresql 9.6 on server, postgres 9.5.13 client on odoo. Use the following commands to upgrade the client to 9.6
 
@@ -236,11 +260,17 @@ Google Chrome may raise an error in a Javascript function called set_file - Erro
 client_max_body_size to 100M;
 ```
 On the mup-nginx-proxy container run `nginx -s reload`
+
 ### Cannot see anything in VSCode TERMINAL
 When VSCode is run inside of VMWare Workstation, you may encounter an issue in using its Terminal. All the text shown is black on black and unreadable. To solve this issue you need to change the rendering mode of the terminal in the VSCode Settings. Choose File>Preferences>Settings, then add this following line.
 
 ```
     "terminal.integrated.rendererType": "dom"
+```
+Alternately VSCode may not appear to show anything at all. Use the following command to start it instead.
+
+```
+$ code
 ```
 
 ### ODOO wekzeug log does not show correct client IP addresses
