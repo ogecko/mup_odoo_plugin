@@ -23,10 +23,12 @@ website https://github.com/OCA/website.git 10.0
 web https://github.com/OCA/web.git 10.0
 # install web_responsive
 
+social https://github.com/OCA/social.git 10.0
+# install mail_tracking_meilgun
+
 odoo_sale_addons https://github.com/ogecko/odoo_sale_addons.git 10.0
 # install product_minimum_order
 # install website_coupon
-
 
 # BUG in connector/component!     account-invoicing https://github.com/OCA/account-invoicing.git 10.0
 # install Sale timesheet
