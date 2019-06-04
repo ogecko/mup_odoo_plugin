@@ -272,6 +272,9 @@ Alternately VSCode may not appear to show anything at all. Use the following com
 ```
 $ code
 ```
+### GIT Corruption and Key Error 'web'
+This was resolved by removing all addon directories and forcing boot.sh to reinstall them
+
 
 ### ODOO wekzeug log does not show correct client IP addresses
 When running ODOO in a Docker container behind an Nginx reverse proxy, you may encounter a problem with the logs not showing the correct client IP addresses. This can make it challenging to debug issues when there are many clients connected at once. To solve this problem you need to ensure the compose-makefile.yml includes ODOO_PROXY_MODE=True to set proxy_mode in the odoo.conf. 
