@@ -272,8 +272,39 @@ Alternately VSCode may not appear to show anything at all. Use the following com
 ```
 $ code
 ```
-### GIT Corruption and Key Error 'web'
+### KeyError: 'web' - GIT Corruption
 This was resolved by removing all addon directories and forcing boot.sh to reinstall them
+
+### KeyError: 'web' - Installation Error
+Odoo Backend is not loading correctly and displays a blank page with the following error in the log
+`addons_path = http.addons_manifest['web']['addons_path']`
+
+Solution was to 
+```
+$ docker exec -it tppweb_odoo_1 bash
+# pip install simplejson
+# exit
+$ make stop
+$ make start
+```
+
+### Forcing Odoo to upgrade a module
+To force Odoo to upgrade modules
+```
+$ docker exec -it tppweb_odoo_1 bash
+#  boot start -d tpp -u web --xmlrpc-port 9090 --longpolling-port 9091
+```
+
+This can cause the TPP Website to reset some entries back to defaults
+1. Fix GST inclusion in prices
+Change to Sales > Configuration > Settings > Select  Show line subtotals with taxes included (B2C)  then Apply 
+2. Fix external report header and footer templates
+Settings > General Settings > Edit External Header > Edit > copy website_tpp/demo/external_layout_header.txt
+Settings > General Settings > Edit External Footer > Edit > copy website_tpp/demo/external_layout_footer.txt
+3. Fix Sales Order Report 
+Settings > Technical > Views > Filter QWeb > Search report_saleorder > Edit > copy website_tpp/demo/report_saleorder_document.txt
+4. Fix Portal Sales Order View 
+Settings > Technical > Views > Filter QWeb > Search followup > Edit > copy website_tpp/demo/website_portal_sale.orders_followup.txt
 
 
 ### ODOO wekzeug log does not show correct client IP addresses
@@ -297,3 +328,4 @@ $ docker exec -it tppweb-odoo_1 bash
 # cd /opt/odoo/sources/odoo/odoo/service
 # cp /opt/odoo/data/logs/wsgi_server.py .
 ```
+
